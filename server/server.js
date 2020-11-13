@@ -1,4 +1,4 @@
-var html_to_pdf = require("html-pdf-node");
+import html_to_pdf from "html-pdf-node";
 
 import express from "express";
 import fs from "fs";
@@ -25,14 +25,17 @@ app.use("^/$", (req, res, next) => {
       `<div id="root">${ReactDOMServer.renderToString(<App />)}</div>`
     );
 
-    html_to_pdf.generatePdf(
-      { content: html },
-      {
-        format: "Letter",
-        path: path.join(__dirname, "data.pdf"),
-        printBackground: true,
-      }
-    );
+    html_to_pdf
+      .generatePdf(
+        { content: html },
+        {
+          format: "Letter",
+          printBackground: true,
+        }
+      )
+      .then((buffer) =>
+        fs.promises.writeFile(path.join(__dirname, "data.pdf"), buffer)
+      );
 
     return res.send(html);
   });
@@ -41,5 +44,5 @@ app.use("^/$", (req, res, next) => {
 app.use(express.static(path.resolve(__dirname, "..", "build")));
 
 app.listen(PORT, () => {
-  console.log(`App launched on ${PORT}`);
+  console.log(`App launched on http://localhost:${PORT}`);
 });
