@@ -1,0 +1,10 @@
+version: '3'
+services:
+  selwebdriver:
+    image: selenium/standalone-chrome:3.141.59
+    ports:
+     - "4444:4444"
+     - "5900:5900"
+    volumes:
+     - $HOME/sel_tmp:/opt/tmp
+     - /dev/shm:/dev/shm
